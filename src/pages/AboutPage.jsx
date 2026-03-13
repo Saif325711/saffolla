@@ -201,7 +201,7 @@ const AboutPage = () => {
         {/* Header */}
         <div className="section-header">
           <h1>About <span className="accent-text">Us</span></h1>
-          <p className="section-tagline">Learn more about Rozmah Digital and our mission</p>
+          <p className="section-tagline">Learn more about Saffolla and our mission</p>
         </div>
 
         {/* Who We Are & Experience */}

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageSquare, Clock, Loader2, CheckCircle2 } from 'lucide-react';
+import { db } from '../firebase/config';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,12 +11,53 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setStatus('loading');
+
+    try {
+      // Initialize EmailJS with Public Key
+      emailjs.init('dDd11An2dqLJcTHnU');
+
+      // 1. Send Email via EmailJS
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        reply_to: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      };
+
+      await emailjs.send(
+        'service_5z4ffjf', 
+        'template_agezx4p', 
+        templateParams
+      );
+
+      // 2. Save to Firestore (Backup)
+      try {
+        await addDoc(collection(db, 'messages'), {
+          ...formData,
+          createdAt: serverTimestamp(),
+        });
+      } catch (fsError) {
+        console.warn('Firestore backup failed:', fsError);
+      }
+
+      setStatus('success');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Submission failed:', error);
+      // Specifically handle the 412 error which is common with Gmail connection
+      if (error.status === 412) {
+        setStatus('auth_error');
+      } else {
+        setStatus('error');
+      }
+    }
   };
 
   const handleChange = (e) => {
@@ -253,9 +297,44 @@ const Contact = () => {
                 required
               ></textarea>
             </div>
-            <button type="submit" className="btn btn-primary submit-btn">
-              Send Message <Send size={18} style={{ marginLeft: '10px' }} />
+            <button 
+              type="submit" 
+              className={`btn submit-btn ${status === 'success' ? 'btn-success' : 'btn-primary'}`}
+              disabled={status === 'loading'}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                backgroundColor: status === 'success' ? '#10b981' : '',
+                borderColor: status === 'success' ? '#10b981' : ''
+              }}
+            >
+              {status === 'loading' ? (
+                <>Sending... <Loader2 size={18} className="animate-spin" style={{ marginLeft: '10px' }} /></>
+              ) : status === 'success' ? (
+                <>Sent Successfully <CheckCircle2 size={18} style={{ marginLeft: '10px' }} /></>
+              ) : (
+                <>Send Message <Send size={18} style={{ marginLeft: '10px' }} /></>
+              )}
             </button>
+            
+            {status === 'auth_error' && (
+              <div style={{ gridColumn: 'span 2', padding: '1rem', background: '#fff1f2', border: '1px solid #fda4af', borderRadius: '0.75rem', marginTop: '1.5rem' }}>
+                <p style={{ color: '#be123c', fontWeight: '600', marginBottom: '0.5rem' }}>Gmail Connection Issue (Error 412)</p>
+                <ol style={{ color: '#e11d48', fontSize: '0.85rem', paddingLeft: '1.25rem', margin: 0 }}>
+                  <li>Go to <b>EmailJS Dashboard</b></li>
+                  <li>Go to <b>Email Services</b></li>
+                  <li>Click your Gmail service</li>
+                  <li>Click <b>Reconnect Account</b> and make sure to check "Send email on your behalf"</li>
+                </ol>
+              </div>
+            )}
+            
+            {status === 'error' && (
+              <p style={{ gridColumn: 'span 2', color: '#ef4444', textAlign: 'center', marginTop: '1rem', fontWeight: '500' }}>
+                Something went wrong. Please check your credentials and try again.
+              </p>
+            )}
           </form>
         </div>
       </div>

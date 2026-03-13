@@ -202,10 +202,40 @@ section {
 
 @media (max-width: 768px) {
   section {
-    padding: 3rem 1rem;
+    padding: 3.5rem 1.25rem;
   }
   
   .section-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.85rem !important;
+  }
+
+  .accent-text {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.85rem;
+  }
+
+  h1 {
+    font-size: 2.15rem !important;
+  }
+
+  h2 {
+    font-size: 1.65rem !important;
+  }
+
+  .container {
+    padding: 0 0.5rem;
   }
 }
