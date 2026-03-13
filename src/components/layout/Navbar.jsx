@@ -3,7 +3,6 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, Rocket } from 'lucide-react';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -44,43 +43,88 @@ const Navbar = () => {
         nav.scrolled {
           background: white;
           box-shadow: var(--shadow-md);
-          padding: 0.75rem 0;
+          padding: 0.5rem 0;
         }
         nav.not-scrolled {
           background: transparent;
-          padding: 1.25rem 0;
+          padding: 1rem 0;
         }
         .nav-container {
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
           align-items: center;
-          padding: 0 1.5rem;
+          padding: 0 1rem;
           max-width: 1280px;
           margin: 0 auto;
+          gap: 0.5rem;
         }
+        
+        @media (min-width: 768px) {
+          .nav-container {
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            gap: 0;
+          }
+        }
+
         .logo {
           display: flex;
           align-items: center;
           gap: 0.5rem;
           font-family: var(--font-heading);
           font-weight: 800;
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           transition: color 0.3s ease;
         }
+        @media (min-width: 768px) {
+          .logo {
+            font-size: 1.5rem;
+          }
+        }
+
         .logo-icon {
           color: var(--primary);
         }
+
         .nav-links {
           display: flex;
-          gap: 2rem;
+          gap: 1.5rem;
           align-items: center;
+          width: 100%;
+          justify-content: flex-start; /* Better for scrolling */
+          overflow-x: auto;
+          white-space: nowrap;
+          padding: 0.5rem 0.5rem 0.75rem;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
+        .nav-links::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+
+        @media (min-width: 768px) {
+          .nav-links {
+            width: auto;
+            gap: 2rem;
+            padding-bottom: 0;
+            overflow-x: visible;
+          }
+        }
+
         .nav-item {
           font-weight: 500;
-          font-size: 0.95rem;
+          font-size: 0.85rem;
           position: relative;
           transition: color 0.3s ease;
+          white-space: nowrap;
         }
+        @media (min-width: 768px) {
+          .nav-item {
+            font-size: 0.95rem;
+          }
+        }
+
         .nav-item:hover, .nav-item.active {
           color: var(--primary) !important;
         }
@@ -97,49 +141,12 @@ const Navbar = () => {
         .nav-item:hover::after, .nav-item.active::after {
           width: 100%;
         }
-        .mobile-menu-btn {
-          display: none;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        .mobile-menu, .overlay {
+
+        .nav-cta {
           display: none;
         }
-        @media (max-width: 768px) {
-          .nav-links {
-            display: none;
-          }
-          .mobile-menu-btn {
-            display: block;
-            z-index: 1001;
-          }
-          .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            height: 100vh;
-            background: white;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            flex-direction: column;
-            padding: 2rem 2rem;
-            gap: 1.5rem;
-            z-index: 1000;
-          }
-          .mobile-menu.open {
-            display: flex;
-            right: 0;
-          }
-          .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-          }
-          .overlay.show {
+        @media (min-width: 768px) {
+          .nav-cta {
             display: block;
           }
         }
@@ -148,7 +155,7 @@ const Navbar = () => {
       <nav className={navClass}>
         <div className="nav-container">
           <NavLink to="/" className="logo" style={{ color: logoColor }}>
-            <Rocket className="logo-icon" size={28} />
+            <Rocket className="logo-icon" size={24} />
             <span>Saffolla</span>
           </NavLink>
 
@@ -163,42 +170,17 @@ const Navbar = () => {
                 {link.name}
               </NavLink>
             ))}
-            <NavLink to="/contact" className="btn btn-primary" style={{ padding: '0.5rem 1.25rem' }}>
+            {/* On mobile, 'Get Quote' is just another link in the scroll */}
+            <NavLink to="/contact" className="nav-item accent-text" style={{ fontWeight: '700' }}>
               Get Quote
             </NavLink>
           </div>
 
-          <button 
-            className="mobile-menu-btn" 
-            onClick={() => setIsOpen(!isOpen)}
-            style={{ color: logoColor }}
-          >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-
-        {/* Overlay and Mobile Menu only on mobile screens */}
-        <div className={`overlay ${isOpen ? 'show' : ''}`} onClick={() => setIsOpen(false)}></div>
-        <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem' }}>
-            <button onClick={() => setIsOpen(false)} style={{ color: 'var(--black)' }}>
-              <X size={28} />
-            </button>
-          </div>
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className="nav-item"
-              style={{ fontSize: '1.25rem', color: 'var(--black)' }}
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
+          <div className="nav-cta">
+            <NavLink to="/contact" className="btn btn-primary" style={{ padding: '0.5rem 1.25rem' }}>
+              Get Quote
             </NavLink>
-          ))}
-          <NavLink to="/contact" className="btn btn-primary" onClick={() => setIsOpen(false)} style={{ marginTop: '1rem' }}>
-            Get Quote
-          </NavLink>
+          </div>
         </div>
       </nav>
     </>
