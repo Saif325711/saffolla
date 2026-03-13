@@ -43,28 +43,29 @@ const Navbar = () => {
         nav.scrolled {
           background: white;
           box-shadow: var(--shadow-md);
-          padding: 0.5rem 0;
+          padding: 0.75rem 0;
         }
         nav.not-scrolled {
           background: transparent;
-          padding: 1rem 0;
+          padding: 1.25rem 0;
         }
         .nav-container {
           display: flex;
-          flex-direction: column;
+          justify-content: space-between;
           align-items: center;
-          padding: 0 1rem;
+          padding: 0 1.5rem;
           max-width: 1280px;
           margin: 0 auto;
-          gap: 0.5rem;
         }
         
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
           .nav-container {
-            flex-direction: row;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            gap: 0;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+          }
+          nav.scrolled, nav.not-scrolled {
+            padding: 0.5rem 0;
           }
         }
 
@@ -74,54 +75,51 @@ const Navbar = () => {
           gap: 0.5rem;
           font-family: var(--font-heading);
           font-weight: 800;
-          font-size: 1.25rem;
+          font-size: 1.5rem;
           transition: color 0.3s ease;
         }
-        @media (min-width: 768px) {
-          .logo {
-            font-size: 1.5rem;
-          }
-        }
-
         .logo-icon {
           color: var(--primary);
         }
 
-        .nav-links {
-          display: flex;
-          gap: 1.5rem;
-          align-items: center;
-          width: 100%;
-          justify-content: flex-start; /* Better for scrolling */
-          overflow-x: auto;
-          white-space: nowrap;
-          padding: 0.5rem 0.5rem 0.75rem;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .nav-links::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
+        @media (max-width: 768px) {
+          .logo {
+            font-size: 1.25rem;
+          }
         }
 
-        @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+          gap: 2rem;
+          align-items: center;
+        }
+
+        @media (max-width: 768px) {
           .nav-links {
-            width: auto;
-            gap: 2rem;
-            padding-bottom: 0;
-            overflow-x: visible;
+            gap: 1.25rem;
+            width: 100%;
+            justify-content: flex-start;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0.5rem 0.5rem 0.75rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          .nav-links::-webkit-scrollbar {
+            display: none;
           }
         }
 
         .nav-item {
           font-weight: 500;
-          font-size: 0.85rem;
+          font-size: 0.95rem;
           position: relative;
           transition: color 0.3s ease;
-          white-space: nowrap;
         }
-        @media (min-width: 768px) {
+
+        @media (max-width: 768px) {
           .nav-item {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
           }
         }
 
@@ -143,11 +141,19 @@ const Navbar = () => {
         }
 
         .nav-cta {
+          display: block;
+        }
+        @media (max-width: 768px) {
+          .nav-cta {
+            display: none;
+          }
+        }
+        .mobile-only {
           display: none;
         }
-        @media (min-width: 768px) {
-          .nav-cta {
-            display: block;
+        @media (max-width: 768px) {
+          .mobile-only {
+            display: inline-block;
           }
         }
       `}</style>
@@ -155,7 +161,7 @@ const Navbar = () => {
       <nav className={navClass}>
         <div className="nav-container">
           <NavLink to="/" className="logo" style={{ color: logoColor }}>
-            <Rocket className="logo-icon" size={24} />
+            <Rocket className="logo-icon" size={28} />
             <span>Saffolla</span>
           </NavLink>
 
@@ -170,8 +176,7 @@ const Navbar = () => {
                 {link.name}
               </NavLink>
             ))}
-            {/* On mobile, 'Get Quote' is just another link in the scroll */}
-            <NavLink to="/contact" className="nav-item accent-text" style={{ fontWeight: '700' }}>
+            <NavLink to="/contact" className="nav-item accent-text mobile-only" style={{ fontWeight: '700' }}>
               Get Quote
             </NavLink>
           </div>
