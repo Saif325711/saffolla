@@ -16,12 +16,12 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/#services' },
-    { name: 'Team', path: '/#team' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Home', path: '/', mobile: true },
+    { name: 'Services', path: '/#services', mobile: false },
+    { name: 'Team', path: '/#team', mobile: false },
+    { name: 'Pricing', path: '/pricing', mobile: true },
+    { name: 'About', path: '/about', mobile: true },
+    { name: 'Contact', path: '/contact', mobile: true },
   ];
 
   // Logic for colors based on page and scroll status
@@ -60,8 +60,9 @@ const Navbar = () => {
         
         @media (max-width: 768px) {
           .nav-container {
-            flex-direction: column;
-            gap: 0.5rem;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 1rem;
             padding: 0.5rem 1rem;
           }
           nav.scrolled, nav.not-scrolled {
@@ -97,11 +98,12 @@ const Navbar = () => {
         @media (max-width: 768px) {
           .nav-links {
             gap: 1.25rem;
-            width: 100%;
-            justify-content: flex-start;
+            width: auto;
+            flex: 1;
+            justify-content: flex-end;
             overflow-x: auto;
             white-space: nowrap;
-            padding: 0.5rem 0.5rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             scrollbar-width: none;
             -ms-overflow-style: none;
           }
@@ -156,6 +158,14 @@ const Navbar = () => {
             display: inline-block;
           }
         }
+        .desktop-only {
+          display: inline-block;
+        }
+        @media (max-width: 768px) {
+          .desktop-only {
+            display: none;
+          }
+        }
       `}</style>
 
       <nav className={navClass}>
@@ -170,7 +180,7 @@ const Navbar = () => {
               <NavLink
                 key={link.name}
                 to={link.path}
-                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} ${!link.mobile ? 'desktop-only' : ''}`}
                 style={{ color: textColor }}
               >
                 {link.name}
