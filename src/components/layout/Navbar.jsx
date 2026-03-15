@@ -97,10 +97,10 @@ const Navbar = () => {
 
         @media (max-width: 768px) {
           .nav-links {
-            gap: 1.25rem;
+            gap: 1rem;
             width: auto;
             flex: 1;
-            justify-content: flex-end;
+            justify-content: flex-start;
             overflow-x: auto;
             white-space: nowrap;
             padding: 0.25rem 0.5rem;

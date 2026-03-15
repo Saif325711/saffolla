@@ -1,28 +1,31 @@
 import React from 'react';
 import { Mail, Linkedin, Twitter } from 'lucide-react';
 import profileImg from '../../assets/images/profile.png';
+import habibImg from '../../assets/images/habib.png';
+import jamiulImg from '../../assets/images/jamiul.png';
+import mahmudulImg from '../../assets/images/mahmudul.png';
 
 const Team = () => {
   const members = [
     {
       name: 'Saiful Islam',
-      role: 'CEO & Founder',
+      role: 'Full Stak Developer',
       image: profileImg,
     },
     {
-      name: 'David Chen',
+      name: 'Habib Mostofa Ahmed',
       role: 'Lead Developer',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400',
+      image: habibImg,
     },
     {
-      name: 'Emily Williams',
+      name: 'Jamiul Islam',
       role: 'UI/UX Designer',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=400',
+      image: jamiulImg,
     },
     {
-      name: 'Michael Smith',
+      name: 'Mahmudul Hssan',
       role: 'Project Manager',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=400',
+      image: mahmudulImg,
     },
   ];
 
